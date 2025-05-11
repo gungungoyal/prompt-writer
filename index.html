@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Writer Table</title>
+  <style>
+    :root {
+      --bg: #f9fafb;
+      --text: #1f2937;
+      --accent: #2563eb;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --hover: #f1f5f9;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: #f3f4f6;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    tr:hover {
+      background-color: var(--hover);
+    }
+
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: #1e40af;
+    }
+
+    @media (max-width: 768px) {
+      th, td {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Prompt Writer Table</h1>
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search prompts or acts..." />
+
+    <table id="promptTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">Act ⬍</th>
+          <th onclick="sortTable(1)">Prompt ⬍</th>
+          <th>Copy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Front-end Developer</td>
+          <td>Act as a frontend developer and create a book website using html, css, js ad bootstrap component</td>
+          <td><button class="copy-btn" onclick="copyPrompt(this)">Copy</button></td>
+        </tr>
+        <tr>
+          <td>frontend development prompt writer</td>
+          <td>Act as a frontend development prompt writer and give me the code in html css for a table and the interface should be visually clean and interactive, responsive, and stylish</td>
+          <td><button class="copy-btn" onclick="copyPrompt(this)">Copy</button></td>
+        </tr>
+        <tr>
+          <td>Prompt engineer guide </td>
+          <td>Act as a prompt engineer guide and tell me step-by-step how should I create a prompt portfolio</td>
+          <td><button class="copy-btn" onclick="copyPrompt(this)">Copy</button></td>
+        </tr>
+        <tr>
+          <td>Job Recruiter</td>
+          <td> Act as a recruiter at choice connect and tell me will you short list this resume</td>
+          <td><button class="copy-btn" onclick="copyPrompt(this)">Copy</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function filterTable() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#promptTable tbody tr");
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+      });
+    }
+
+    function sortTable(colIndex) {
+      const table = document.getElementById("promptTable");
+      const tbody = table.tBodies[0];
+      const rows = Array.from(tbody.rows);
+
+      const asc = table.getAttribute("data-sort") !== "asc";
+      table.setAttribute("data-sort", asc ? "asc" : "desc");
+
+      rows.sort((a, b) => {
+        const x = a.cells[colIndex].textContent.trim().toLowerCase();
+        const y = b.cells[colIndex].textContent.trim().toLowerCase();
+        return asc ? x.localeCompare(y) : y.localeCompare(x);
+      });
+
+      rows.forEach(row => tbody.appendChild(row));
+    }
+
+    function copyPrompt(btn) {
+      const text = btn.closest("tr").children[1].textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = "Copied!";
+        setTimeout(() => btn.textContent = "Copy", 1500);
+      });
+    }
+  </script>
+</body>
+</html>
